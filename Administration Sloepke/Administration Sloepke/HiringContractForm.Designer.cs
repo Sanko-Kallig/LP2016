@@ -30,13 +30,13 @@
         {
             this.lbxMuscleBoat = new System.Windows.Forms.ListBox();
             this.lbxMotorBoot = new System.Windows.Forms.ListBox();
-            this.btnSaveContract = new System.Windows.Forms.ListBox();
+            this.lbxProducts = new System.Windows.Forms.ListBox();
             this.btnMuscleAdd = new System.Windows.Forms.Button();
             this.btnMotorAdd = new System.Windows.Forms.Button();
             this.lbxContractMuscle = new System.Windows.Forms.ListBox();
             this.lbxContractMotor = new System.Windows.Forms.ListBox();
-            this.textBox1 = new System.Windows.Forms.TextBox();
-            this.textBox2 = new System.Windows.Forms.TextBox();
+            this.tbxNaam = new System.Windows.Forms.TextBox();
+            this.tbxEmail = new System.Windows.Forms.TextBox();
             this.nudBudget = new System.Windows.Forms.NumericUpDown();
             this.btnBudget = new System.Windows.Forms.Button();
             this.btnAddContract = new System.Windows.Forms.Button();
@@ -52,7 +52,20 @@
             this.lbxChosenProducts = new System.Windows.Forms.ListBox();
             this.btnAddProduct = new System.Windows.Forms.Button();
             this.lbxWaterEntity = new System.Windows.Forms.ListBox();
+            this.nudFriese = new System.Windows.Forms.NumericUpDown();
+            this.label8 = new System.Windows.Forms.Label();
+            this.label9 = new System.Windows.Forms.Label();
+            this.dtpStart = new System.Windows.Forms.DateTimePicker();
+            this.dtpEnd = new System.Windows.Forms.DateTimePicker();
+            this.label10 = new System.Windows.Forms.Label();
+            this.label11 = new System.Windows.Forms.Label();
+            this.nudTotalPrice = new System.Windows.Forms.NumericUpDown();
+            this.label12 = new System.Windows.Forms.Label();
+            this.label13 = new System.Windows.Forms.Label();
+            this.label14 = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.nudBudget)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.nudFriese)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.nudTotalPrice)).BeginInit();
             this.SuspendLayout();
             // 
             // lbxMuscleBoat
@@ -72,16 +85,15 @@
             this.lbxMotorBoot.Name = "lbxMotorBoot";
             this.lbxMotorBoot.Size = new System.Drawing.Size(288, 180);
             this.lbxMotorBoot.TabIndex = 1;
-            this.lbxMotorBoot.SelectedIndexChanged += new System.EventHandler(this.lbxMotorBoot_SelectedIndexChanged);
             // 
-            // btnSaveContract
+            // lbxProducts
             // 
-            this.btnSaveContract.FormattingEnabled = true;
-            this.btnSaveContract.ItemHeight = 16;
-            this.btnSaveContract.Location = new System.Drawing.Point(703, 38);
-            this.btnSaveContract.Name = "btnSaveContract";
-            this.btnSaveContract.Size = new System.Drawing.Size(221, 468);
-            this.btnSaveContract.TabIndex = 2;
+            this.lbxProducts.FormattingEnabled = true;
+            this.lbxProducts.ItemHeight = 16;
+            this.lbxProducts.Location = new System.Drawing.Point(703, 38);
+            this.lbxProducts.Name = "lbxProducts";
+            this.lbxProducts.Size = new System.Drawing.Size(221, 628);
+            this.lbxProducts.TabIndex = 2;
             // 
             // btnMuscleAdd
             // 
@@ -121,30 +133,30 @@
             this.lbxContractMotor.Size = new System.Drawing.Size(288, 180);
             this.lbxContractMotor.TabIndex = 6;
             // 
-            // textBox1
+            // tbxNaam
             // 
-            this.textBox1.Location = new System.Drawing.Point(770, 700);
-            this.textBox1.Name = "textBox1";
-            this.textBox1.Size = new System.Drawing.Size(222, 22);
-            this.textBox1.TabIndex = 7;
+            this.tbxNaam.Location = new System.Drawing.Point(941, 722);
+            this.tbxNaam.Name = "tbxNaam";
+            this.tbxNaam.Size = new System.Drawing.Size(222, 22);
+            this.tbxNaam.TabIndex = 7;
             // 
-            // textBox2
+            // tbxEmail
             // 
-            this.textBox2.Location = new System.Drawing.Point(770, 749);
-            this.textBox2.Name = "textBox2";
-            this.textBox2.Size = new System.Drawing.Size(222, 22);
-            this.textBox2.TabIndex = 8;
+            this.tbxEmail.Location = new System.Drawing.Point(941, 771);
+            this.tbxEmail.Name = "tbxEmail";
+            this.tbxEmail.Size = new System.Drawing.Size(222, 22);
+            this.tbxEmail.TabIndex = 8;
             // 
             // nudBudget
             // 
-            this.nudBudget.Location = new System.Drawing.Point(773, 800);
+            this.nudBudget.Location = new System.Drawing.Point(336, 623);
             this.nudBudget.Name = "nudBudget";
             this.nudBudget.Size = new System.Drawing.Size(150, 22);
             this.nudBudget.TabIndex = 9;
             // 
             // btnBudget
             // 
-            this.btnBudget.Location = new System.Drawing.Point(773, 840);
+            this.btnBudget.Location = new System.Drawing.Point(336, 663);
             this.btnBudget.Name = "btnBudget";
             this.btnBudget.Size = new System.Drawing.Size(150, 41);
             this.btnBudget.TabIndex = 10;
@@ -154,12 +166,13 @@
             // 
             // btnAddContract
             // 
-            this.btnAddContract.Location = new System.Drawing.Point(896, 635);
+            this.btnAddContract.Location = new System.Drawing.Point(1066, 827);
             this.btnAddContract.Name = "btnAddContract";
             this.btnAddContract.Size = new System.Drawing.Size(96, 43);
             this.btnAddContract.TabIndex = 11;
             this.btnAddContract.Text = "Opslaan contract";
             this.btnAddContract.UseVisualStyleBackColor = true;
+            this.btnAddContract.Click += new System.EventHandler(this.btnAddContract_Click);
             // 
             // label1
             // 
@@ -209,7 +222,7 @@
             // label6
             // 
             this.label6.AutoSize = true;
-            this.label6.Location = new System.Drawing.Point(770, 678);
+            this.label6.Location = new System.Drawing.Point(947, 702);
             this.label6.Name = "label6";
             this.label6.Size = new System.Drawing.Size(49, 17);
             this.label6.TabIndex = 17;
@@ -218,7 +231,7 @@
             // label7
             // 
             this.label7.AutoSize = true;
-            this.label7.Location = new System.Drawing.Point(770, 729);
+            this.label7.Location = new System.Drawing.Point(947, 751);
             this.label7.Name = "label7";
             this.label7.Size = new System.Drawing.Size(46, 17);
             this.label7.TabIndex = 18;
@@ -238,7 +251,7 @@
             this.btnNamedEntity.Name = "btnNamedEntity";
             this.btnNamedEntity.Size = new System.Drawing.Size(148, 32);
             this.btnNamedEntity.TabIndex = 20;
-            this.btnNamedEntity.Text = "button1";
+            this.btnNamedEntity.Text = "Voeg toe";
             this.btnNamedEntity.UseVisualStyleBackColor = true;
             this.btnNamedEntity.Click += new System.EventHandler(this.btnNamedEntity_Click);
             // 
@@ -248,12 +261,12 @@
             this.lbxChosenProducts.ItemHeight = 16;
             this.lbxChosenProducts.Location = new System.Drawing.Point(950, 38);
             this.lbxChosenProducts.Name = "lbxChosenProducts";
-            this.lbxChosenProducts.Size = new System.Drawing.Size(221, 468);
+            this.lbxChosenProducts.Size = new System.Drawing.Size(221, 628);
             this.lbxChosenProducts.TabIndex = 21;
             // 
             // btnAddProduct
             // 
-            this.btnAddProduct.Location = new System.Drawing.Point(703, 517);
+            this.btnAddProduct.Location = new System.Drawing.Point(702, 691);
             this.btnAddProduct.Name = "btnAddProduct";
             this.btnAddProduct.Size = new System.Drawing.Size(75, 38);
             this.btnAddProduct.TabIndex = 23;
@@ -270,11 +283,113 @@
             this.lbxWaterEntity.Size = new System.Drawing.Size(288, 180);
             this.lbxWaterEntity.TabIndex = 24;
             // 
+            // nudFriese
+            // 
+            this.nudFriese.Location = new System.Drawing.Point(336, 584);
+            this.nudFriese.Name = "nudFriese";
+            this.nudFriese.Size = new System.Drawing.Size(150, 22);
+            this.nudFriese.TabIndex = 25;
+            // 
+            // label8
+            // 
+            this.label8.AutoSize = true;
+            this.label8.Location = new System.Drawing.Point(12, 564);
+            this.label8.Name = "label8";
+            this.label8.Size = new System.Drawing.Size(106, 17);
+            this.label8.TabIndex = 26;
+            this.label8.Text = "Waterlichamen:";
+            // 
+            // label9
+            // 
+            this.label9.AutoSize = true;
+            this.label9.Location = new System.Drawing.Point(333, 564);
+            this.label9.Name = "label9";
+            this.label9.Size = new System.Drawing.Size(95, 17);
+            this.label9.TabIndex = 27;
+            this.label9.Text = "Friese meren:";
+            // 
+            // dtpStart
+            // 
+            this.dtpStart.Location = new System.Drawing.Point(336, 796);
+            this.dtpStart.Name = "dtpStart";
+            this.dtpStart.Size = new System.Drawing.Size(200, 22);
+            this.dtpStart.TabIndex = 28;
+            // 
+            // dtpEnd
+            // 
+            this.dtpEnd.Location = new System.Drawing.Point(336, 842);
+            this.dtpEnd.Name = "dtpEnd";
+            this.dtpEnd.Size = new System.Drawing.Size(200, 22);
+            this.dtpEnd.TabIndex = 29;
+            // 
+            // label10
+            // 
+            this.label10.AutoSize = true;
+            this.label10.Location = new System.Drawing.Point(947, 9);
+            this.label10.Name = "label10";
+            this.label10.Size = new System.Drawing.Size(137, 17);
+            this.label10.TabIndex = 30;
+            this.label10.Text = "Gekozen producten:";
+            // 
+            // label11
+            // 
+            this.label11.AutoSize = true;
+            this.label11.Location = new System.Drawing.Point(9, 778);
+            this.label11.Name = "label11";
+            this.label11.Size = new System.Drawing.Size(106, 17);
+            this.label11.TabIndex = 31;
+            this.label11.Text = "Waterlichamen:";
+            // 
+            // nudTotalPrice
+            // 
+            this.nudTotalPrice.Location = new System.Drawing.Point(336, 742);
+            this.nudTotalPrice.Name = "nudTotalPrice";
+            this.nudTotalPrice.Size = new System.Drawing.Size(150, 22);
+            this.nudTotalPrice.TabIndex = 32;
+            // 
+            // label12
+            // 
+            this.label12.AutoSize = true;
+            this.label12.Location = new System.Drawing.Point(333, 722);
+            this.label12.Name = "label12";
+            this.label12.Size = new System.Drawing.Size(82, 17);
+            this.label12.TabIndex = 33;
+            this.label12.Text = "Totaal prijs:";
+            // 
+            // label13
+            // 
+            this.label13.AutoSize = true;
+            this.label13.Location = new System.Drawing.Point(333, 778);
+            this.label13.Name = "label13";
+            this.label13.Size = new System.Drawing.Size(91, 17);
+            this.label13.TabIndex = 34;
+            this.label13.Text = "Begin datum:";
+            // 
+            // label14
+            // 
+            this.label14.AutoSize = true;
+            this.label14.Location = new System.Drawing.Point(333, 821);
+            this.label14.Name = "label14";
+            this.label14.Size = new System.Drawing.Size(83, 17);
+            this.label14.TabIndex = 35;
+            this.label14.Text = "Eind datum:";
+            // 
             // HiringContractForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1202, 886);
+            this.Controls.Add(this.label14);
+            this.Controls.Add(this.label13);
+            this.Controls.Add(this.label12);
+            this.Controls.Add(this.nudTotalPrice);
+            this.Controls.Add(this.label11);
+            this.Controls.Add(this.label10);
+            this.Controls.Add(this.dtpEnd);
+            this.Controls.Add(this.dtpStart);
+            this.Controls.Add(this.label9);
+            this.Controls.Add(this.label8);
+            this.Controls.Add(this.nudFriese);
             this.Controls.Add(this.lbxWaterEntity);
             this.Controls.Add(this.btnAddProduct);
             this.Controls.Add(this.lbxChosenProducts);
@@ -290,18 +405,20 @@
             this.Controls.Add(this.btnAddContract);
             this.Controls.Add(this.btnBudget);
             this.Controls.Add(this.nudBudget);
-            this.Controls.Add(this.textBox2);
-            this.Controls.Add(this.textBox1);
+            this.Controls.Add(this.tbxEmail);
+            this.Controls.Add(this.tbxNaam);
             this.Controls.Add(this.lbxContractMotor);
             this.Controls.Add(this.lbxContractMuscle);
             this.Controls.Add(this.btnMotorAdd);
             this.Controls.Add(this.btnMuscleAdd);
-            this.Controls.Add(this.btnSaveContract);
+            this.Controls.Add(this.lbxProducts);
             this.Controls.Add(this.lbxMotorBoot);
             this.Controls.Add(this.lbxMuscleBoat);
             this.Name = "HiringContractForm";
             this.Text = "VerhuurContractForm";
             ((System.ComponentModel.ISupportInitialize)(this.nudBudget)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.nudFriese)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.nudTotalPrice)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -311,13 +428,13 @@
 
         private System.Windows.Forms.ListBox lbxMuscleBoat;
         private System.Windows.Forms.ListBox lbxMotorBoot;
-        private System.Windows.Forms.ListBox btnSaveContract;
+        private System.Windows.Forms.ListBox lbxProducts;
         private System.Windows.Forms.Button btnMuscleAdd;
         private System.Windows.Forms.Button btnMotorAdd;
         private System.Windows.Forms.ListBox lbxContractMuscle;
         private System.Windows.Forms.ListBox lbxContractMotor;
-        private System.Windows.Forms.TextBox textBox1;
-        private System.Windows.Forms.TextBox textBox2;
+        private System.Windows.Forms.TextBox tbxNaam;
+        private System.Windows.Forms.TextBox tbxEmail;
         private System.Windows.Forms.NumericUpDown nudBudget;
         private System.Windows.Forms.Button btnBudget;
         private System.Windows.Forms.Button btnAddContract;
@@ -333,5 +450,16 @@
         private System.Windows.Forms.ListBox lbxChosenProducts;
         private System.Windows.Forms.Button btnAddProduct;
         private System.Windows.Forms.ListBox lbxWaterEntity;
+        private System.Windows.Forms.NumericUpDown nudFriese;
+        private System.Windows.Forms.Label label8;
+        private System.Windows.Forms.Label label9;
+        private System.Windows.Forms.DateTimePicker dtpStart;
+        private System.Windows.Forms.DateTimePicker dtpEnd;
+        private System.Windows.Forms.Label label10;
+        private System.Windows.Forms.Label label11;
+        private System.Windows.Forms.NumericUpDown nudTotalPrice;
+        private System.Windows.Forms.Label label12;
+        private System.Windows.Forms.Label label13;
+        private System.Windows.Forms.Label label14;
     }
 }

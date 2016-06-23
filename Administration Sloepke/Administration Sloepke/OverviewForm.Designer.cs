@@ -50,6 +50,7 @@
             this.btnView.TabIndex = 1;
             this.btnView.Text = "Inzien";
             this.btnView.UseVisualStyleBackColor = true;
+            this.btnView.Click += new System.EventHandler(this.btnView_Click);
             // 
             // btnNewContract
             // 

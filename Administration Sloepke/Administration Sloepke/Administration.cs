@@ -4,6 +4,7 @@
 // <author>Sander Koch</author>
 
 using System.IO;
+using System.Text.RegularExpressions;
 
 namespace Administration_Sloepke
 {
@@ -84,7 +85,25 @@ namespace Administration_Sloepke
 
         public bool AddHiringContract(HiringContract hiringContract)
         {
+            for(int i = 0; i < hiringContract.FrieseCount; i++)
+            {
+                hiringContract.WaterEntities = new List<WaterEntity>();
+                hiringContract.WaterEntities.Add(WaterEntities[i]);
+            }
             return DatabaseManager.AddHiringContract(hiringContract);
+        }
+
+        public bool CheckEmail(string email)
+        {
+            if (string.IsNullOrEmpty(email))
+            {
+                return false;
+            }
+            else
+            {
+                // Return true if strIn is in valid e-mail format.
+                return Regex.IsMatch(email, @"^(?("")(""[^""]+?""@)|(([0-9a-z]((\.(?!\.))|[-!#\$%&'\*\+/=\?\^`\{\}\|~\w])*)(?<=[0-9a-z])@))" + @"(?(\[)(\[(\d{1,3}\.){3}\d{1,3}\])|(([0-9a-z][-\w]*[0-9a-z]*\.)+[a-z0-9]{2,17}))$", RegexOptions.IgnoreCase);
+            }
         }
 
         public bool AddProduct(Product product)

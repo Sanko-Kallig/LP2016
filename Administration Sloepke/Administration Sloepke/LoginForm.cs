@@ -33,6 +33,10 @@ namespace Administration_Sloepke
                 this.Show();
                 this.Logout();
             }
+            else
+            {
+                MessageBox.Show("Kon niet inloggen, controleer of uw Email of wachtwoord correct is.");
+            }
         }
 
         /// <summary>

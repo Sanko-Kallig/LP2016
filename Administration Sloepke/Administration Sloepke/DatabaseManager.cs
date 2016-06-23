@@ -368,15 +368,37 @@ namespace Administration_Sloepke
             }
         }
 
-        internal static Customer GetCustomer(string email)
+        internal static Customer GetCustomer(string mail)
         {
-            throw new NotImplementedException();
+            try
+            {
+                Customer returnCustomer = new Customer();
+                OracleCommand customerCommand =
+                    CreateOracleCommand(
+                        "Select * From Huurder Where Email = :email");
+                customerCommand.Parameters.Add(":email", mail);
+
+                OracleDataReader customerReader = ExecuteQuery(customerCommand);
+                while (customerReader.Read())
+                {
+                    int id = Convert.ToInt32(customerReader["ID"].ToString());
+                    string name = customerReader["Naam"].ToString();
+                    string email = customerReader["Email"].ToString();
+                    returnCustomer = new Customer(id, email, name);
+                }
+                return returnCustomer;
+            }
+            catch (Exception e)
+            {
+                throw;
+            }
         }
 
         internal static bool AddHiringContract(HiringContract hiringContract)
         {
             try
             {
+                bool sub = false;
                 OracleCommand contractCommand =
                     CreateOracleCommand(
                         "INSERT INTO HUURCONTRACT(BeginTijd, EindTijd, Huurder_ID, Verhuurder_ID) VALUES(:startDate, :endDate, :customerID, :employeeID)");
@@ -387,13 +409,19 @@ namespace Administration_Sloepke
 
                 if (ExecuteNonQuery(contractCommand))
                 {
+                    OracleCommand selectCommand = CreateOracleCommand("SELECT MAX(ID) FROM HUURCONTRACT");
+                    OracleDataReader selectReader = ExecuteQuery(selectCommand);
+                    while (selectReader.Read())
+                    {
+                        hiringContract.ID = Convert.ToInt32(selectReader["MAX(ID)"].ToString());
+                    }
                     foreach (IBoat boat in hiringContract.Boats)
                     {
                         OracleCommand boatCommand =
                             CreateOracleCommand("Insert into HUUR_BOTEN(Huurcontract_ID, Boot_Naam) VALUES (:id, :name)");
                         boatCommand.Parameters.Add(":id", hiringContract.ID);
                         boatCommand.Parameters.Add(":name", boat.Name);
-                        ExecuteNonQuery(boatCommand);
+                        sub = ExecuteNonQuery(boatCommand);
                     }
                     foreach (Product p in hiringContract.Products)
                     {
@@ -401,17 +429,19 @@ namespace Administration_Sloepke
                             CreateOracleCommand("Insert into HUUR_ARTIKELEN(Huurcontract_ID, ARTIKEL_ID) VALUES (:id, :aid)");
                         productCommand.Parameters.Add(":id", hiringContract.ID);
                         productCommand.Parameters.Add(":aid", p.ID);
-                        ExecuteNonQuery(productCommand);
+                        sub = ExecuteNonQuery(productCommand);
                     }
                     foreach (WaterEntity w in hiringContract.WaterEntities)
                     {
                         OracleCommand waterCommand =
-                            CreateOracleCommand("Insert into HUUR_BOTEN(Huurcontract_ID, Boot_Naam) VALUES (:id, :name)");
-                        boatCommand.Parameters.Add(":id", hiringContract.ID);
-                        boatCommand.Parameters.Add(":name", boat.Name);
-                        ExecuteNonQuery(boatCommand);
+                            CreateOracleCommand(
+                                "Insert into HUUR_Waterlichaam(Huurcontract_ID, Waterlichaam_ID) VALUES (:id, :wid)");
+                        waterCommand.Parameters.Add(":id", hiringContract.ID);
+                        waterCommand.Parameters.Add(":wid", w.ID);
+                        sub = ExecuteNonQuery(waterCommand);
                     }
                 }
+                return sub;
             }
             catch (Exception)
             {

@@ -42,5 +42,13 @@ namespace Administration_Sloepke
             hCF.ShowDialog();
             this.Show();
         }
+
+        private void btnView_Click(object sender, EventArgs e)
+        {
+            this.Hide();
+            ViewContract vC = new ViewContract(Admin.Constracts[lbxContracts.SelectedIndex], Admin);
+            vC.ShowDialog();
+            this.Show();
+        }
     }
 }

@@ -81,6 +81,12 @@
     <Compile Include="HiringContractForm.Designer.cs">
       <DependentUpon>HiringContractForm.cs</DependentUpon>
     </Compile>
+    <Compile Include="ViewContract.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="ViewContract.Designer.cs">
+      <DependentUpon>ViewContract.cs</DependentUpon>
+    </Compile>
     <Compile Include="WaterEntity.cs" />
     <EmbeddedResource Include="HiringContractForm.resx">
       <DependentUpon>HiringContractForm.cs</DependentUpon>
@@ -100,6 +106,9 @@
       <AutoGen>True</AutoGen>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
+    <EmbeddedResource Include="ViewContract.resx">
+      <DependentUpon>ViewContract.cs</DependentUpon>
+    </EmbeddedResource>
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>

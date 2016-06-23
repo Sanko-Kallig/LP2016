@@ -3,6 +3,7 @@
 // </copyright>
 // <author>Sander Koch</author>
 
+using System.IO;
 using System.Runtime.InteropServices;
 
 namespace Administration_Sloepke
@@ -83,6 +84,11 @@ namespace Administration_Sloepke
             Products = new List<Product>();
         }
 
+        /// <summary>
+        /// Used to calculate how many lakes you can visit according to this budget.
+        /// </summary>
+        /// <param name="budget">The amount of money you have to spend.</param>
+        /// <returns>Returns the total price.</returns>
         public double CalculateBudget(double budget)
         {
             int days = EndDate.Day - StartDate.Day;
@@ -122,18 +128,9 @@ namespace Administration_Sloepke
             {
                 if((int)Math.Floor(leftover / (1 * days)) <= 5 && (int)Math.Floor(leftover / (1 * days)) > 0)
                 {
-                    if ((int) Math.Floor(leftover/(1*days)) > 12)
-                    {
-                        FrieseCount = 12;
-                        totalprice += (FrieseCount * 1) * days;
-                    }
-                    else
-                    {
+
                         FrieseCount = (int)Math.Floor(leftover / (1 * days));
                         totalprice += (FrieseCount * 1) * days;
-                    }
-                    
-
                 }
                 else if ((int) Math.Floor(leftover/(1.5*days)) > 0)
                 {
@@ -156,6 +153,53 @@ namespace Administration_Sloepke
             return totalprice;
         }
 
+        /// <summary>
+        /// Calculates the total price of an hiring contract.
+        /// </summary>
+        /// <returns>The total price of the hiring contract.</returns>
+        public double TotalPrice()
+        {
+            int days = EndDate.Day - StartDate.Day;
+            double totalprice = 0;
+            double leftover = 0;
+            if (Products != null)
+            {
+                foreach (Product p in Products)
+                {
+                    totalprice += (p.Price * days);
+                }
+            }
+
+            foreach (IBoat b in Boats.Where(b => b is MuscleBoat))
+            {
+                totalprice += (10 * days);
+            }
+            foreach (IBoat b in Boats.Where(b => b is MotorBoat))
+            {
+                totalprice += (15 * days);
+            }
+            if (WaterEntities != null)
+            {
+                foreach (WaterEntity w in WaterEntities.Where(b => b.Name != null))
+                {
+                    totalprice += (2 * days);
+                }
+            }
+            if (FrieseCount > 0 && FrieseCount <= 5)
+            {
+                totalprice += FrieseCount*days;
+            }
+            if (FrieseCount > 0 && FrieseCount > 5)
+            {
+                totalprice += (FrieseCount*1.5)*days;
+            }
+            return totalprice;
+        }
+
+        /// <summary>
+        /// Gets all the motor boats out of the generic list of boats.
+        /// </summary>
+        /// <returns>A list of motor boats.</returns>
         public List<MotorBoat> GetMotorBoats()
         {
             List<MotorBoat> returnMotorBoats = new List<MotorBoat>();
@@ -167,6 +211,10 @@ namespace Administration_Sloepke
         }
 
 
+        /// <summary>
+        /// Gets all the muscle boats out of the generic list of boats.
+        /// </summary>
+        /// <returns>A list of muscle boats.</returns>
         public List<MuscleBoat> GetMuscleBoats()
         {
             List<MuscleBoat> returnMuscleBoats = new List<MuscleBoat>();
@@ -177,6 +225,49 @@ namespace Administration_Sloepke
             return returnMuscleBoats;
         }
 
+        /// <summary>
+        /// Exports the rental contract to a text file.
+        /// </summary>
+        /// <param name="path">The path of the file.</param>
+        /// <param name="html">If it needs to be an html export or not.</param>
+        public void ExportHiringContract(string path, bool html = false)
+        {
+            StreamWriter writer = new StreamWriter(path);
+            writer.WriteLine("Huur contract 'T Sloepke");
+            writer.WriteLine("Klant: " + Renter.Name);
+            writer.WriteLine("Geholpen door: ", Employee.Name);
+
+            writer.WriteLine("Verhuurde boten: ");
+
+            foreach (MuscleBoat m in GetMuscleBoats())
+            {
+                writer.Write(m.ToString());
+            }
+            foreach (MotorBoat m in GetMotorBoats())
+            {
+                writer.Write(m.ToString());
+            }
+
+            writer.WriteLine("Verhuurde producten: ");
+
+            foreach (Product p in Products)
+            {
+                writer.WriteLine(p.ToString());
+            }
+
+            writer.WriteLine("Aantal Friesse meren: " + FrieseCount.ToString());
+            writer.WriteLine("Dag prijs Friese meren: 1");
+            writer.WriteLine("Indien meer dan 5 Friese meren worden bezocht is de dag prijs 1.5");
+            writer.WriteLine("Andere waterlichaamen: ");
+            foreach (WaterEntity w in WaterEntities.Where(w => w.Name != null))
+            {
+                writer.WriteLine("Naam: ", w.Name);
+                writer.WriteLine("Dag prijs: 2");
+            }
+
+            writer.WriteLine("Totaal prijs: " + TotalPrice());
+            writer.Close();
+        }
 
         public override string ToString()
         {
