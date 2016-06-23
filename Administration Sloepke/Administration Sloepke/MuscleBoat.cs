@@ -13,18 +13,19 @@ namespace Administration_Sloepke
     /// <summary>
     /// A boat powered by the power of muscles.
     /// </summary>
-    public class MuscleBoat
+    public class MuscleBoat : Boat
     {
         /// <summary>
         /// Gets or sets the type of boat
         /// </summary>
         public string Type { get; set; }
 
+
         /// <summary>
         /// Initializes a new instance of the <see cref="MuscleBoat"/> class.
         /// </summary>
         /// <param name="type"></param>
-        public MuscleBoat(string type)
+        public MuscleBoat(string name, double dayPrice, string type) : base(name, dayPrice)
         {
             this.Type = type;
         }

@@ -30,6 +30,10 @@ namespace Administration_Sloepke
         /// </summary>
         public string Name { get; set; }
 
+        public Customer()
+        {
+            
+        }
         /// <summary>
         /// Initializes a new instance of the <see cref="Account"/> class.
         /// </summary>

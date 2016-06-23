@@ -30,17 +30,25 @@ namespace Administration_Sloepke
         /// </summary>
         public string Name { get; set; }
 
+        public bool IsAdmin { get; set; }
+
+        public Account()
+        {
+            
+        }
+
         /// <summary>
         /// Initializes a new instance of the <see cref="Account"/> class.
         /// </summary>
         /// <param name="id">The account's ID</param>
         /// <param name="email">The account's Email</param>
         /// <param name="name">The account's name</param>
-        public Account(int id, string email, string name)
+        public Account(int id, string email, string name, bool isAdmin)
         {
             this.ID = id;
             this.Email = email;
             this.Name = name;
+            this.IsAdmin = isAdmin;
         }
     }
 }

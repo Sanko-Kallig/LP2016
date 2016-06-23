@@ -47,6 +47,12 @@ namespace Administration_Sloepke
         /// </summary>
         public Customer Renter { get; set; }
 
+        public List<Product> Products { get; set; }
+
+        public List<IBoat> Boats { get; set; }
+
+        public List<WaterEntity> WaterEntities { get; set; }
+
         /// <summary>
         /// Initializes a new instance of the <see cref="HiringContract"/> class.
         /// </summary>
@@ -62,6 +68,11 @@ namespace Administration_Sloepke
             this.EndDate = endDate;
             this.Employee = employee;
             this.Renter = renter;
+        }
+
+        public override string ToString()
+        {
+            return this.ID + " - " + this.StartDate.ToString() + " - " + this.Renter.Name;
         }
     }
 }

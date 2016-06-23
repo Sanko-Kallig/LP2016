@@ -27,6 +27,15 @@ CREATE TABLE Huurder
 	Email	VARCHAR2(32)	NOT NULL UNIQUE,
 );
 
+CREATE TABLE HuurContract
+(
+	ID				NUMBER(10)		PRIMARY KEY,
+	BeginTijd		DATE		NOT NULL,
+	EindTijd		DATE		NOT NULL,
+	Huurder_ID		NUMBER(10)	NOT NULL,
+	Verhuurder_ID	NUMBER(10)	NOT NULL
+);
+
 CREATE TABLE Artikel
 (
 	ID		NUMBER(10)		PRIMARY KEY,
@@ -58,9 +67,9 @@ CREATE TABLE Huur_Artikelen
 CREATE TABLE Huur_Boten
 (
 	HuurContract_ID	NUMBER(10)	NOT NULL,
-	Boot_ID			NUMBER(10)	NOT NULL,
+	Boot_Naam		VARCHAR(64)	NOT NULL,
 	
-	PRIMARY KEY(HuurContract_ID, Boot_ID)
+	PRIMARY KEY(HuurContract_ID, Boot_Naam)
 );
 
 CREATE TABLE Huur_Waterlichaam
@@ -83,3 +92,15 @@ CREATE TABLE SpierBoot
 	Naam		VARCHAR(64)		PRIMARY KEY,
 	"Type"		VARCHAR2(64)	NOT NULL
 );
+
+
+ALTER TABLE HuurContract ADD FOREIGN KEY (Verhuurder_ID)	REFERENCES	"Account"(ID);
+ALTER TABLE HuurContract ADD FOREIGN KEY (Huurder_ID)	REFERENCES	Huurder(ID);
+ALTER TABLE Huur_Artikelen ADD FOREIGN KEY (HuurContract_ID)	REFERENCES HuurContract(ID);
+ALTER TABLE Huur_Artikelen	ADD FOREIGN KEY (Artikel_ID)	REFERENCES	Artikel(ID);
+ALTER TABLE Huur_Boten		ADD FOREIGN KEY (HuurContract_ID) REFERENCES HuurContract(ID);
+ALTER TABLE Huur_Boten		ADD FOREIGN KEY (Boot_Naam)		REFERENCES Boot(Naam);
+ALTER TABLE Huur_Waterlichaam	ADD FOREIGN KEY(HuurContract_ID)	REFERENCES HuurContract(ID);
+ALTER TABLE Huur_Waterlichaam	ADD FOREIGN KEY(Waterlichaam_ID)	REFERENCES Waterlichaam(ID);	
+ALTER TABLE MotorBoot ADD FOREIGN KEY (Naam)	REFERENCES	Boot(Naam);
+ALTER TABLE SpierBoot ADD FOREIGN KEY (Naam)	REFERENCES	Boot(Naam);

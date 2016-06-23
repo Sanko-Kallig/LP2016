@@ -47,14 +47,225 @@ namespace Administration_Sloepke
             }
         }
 
-        internal static Account GetAccount(string email, string password)
+        public static Account GetAccount(string email, string password)
         {
-            throw new NotImplementedException();
+            try
+            {
+                Account returnAccount = null;
+                OracleCommand selectCommand =
+                    CreateOracleCommand("SELECT * FROM \"Account\" WHERE Email = :email and Wachtwoord = :password");
+                selectCommand.Parameters.Add(":email", email);
+                selectCommand.Parameters.Add(":password", password);
+
+                OracleDataReader MainReader = ExecuteQuery(selectCommand);
+                while (MainReader.Read())
+                {
+                    int id = Convert.ToInt32(MainReader["ID"].ToString());
+                    string Email = MainReader["Email"].ToString();
+                    string Name = MainReader["Naam"].ToString();
+                    bool isAdmin = Convert.ToBoolean(Convert.ToInt32(MainReader["IsAdmin"].ToString()));
+                    returnAccount = new Account(id, Email, Name, isAdmin);
+
+
+                }
+                return returnAccount;
+            }
+            catch (Exception e)
+            {
+                throw;
+            }
         }
 
-        internal static List<HiringContract> GetHiringContracts()
+        public static List<HiringContract> GetHiringContracts()
         {
-            throw new NotImplementedException();
+            try
+            {
+                List<HiringContract> returnContracts = new List<HiringContract>();
+                OracleCommand selectCommand = CreateOracleCommand("SELECT * FROM HUURCONTRACT");
+
+                OracleDataReader MainReader = ExecuteQuery(selectCommand);
+
+                while (MainReader.Read())
+                {
+                    int ID = Convert.ToInt32(MainReader["ID"].ToString());
+                    DateTime startDate = Convert.ToDateTime(MainReader["BeginTijd"].ToString());
+                    DateTime endDate = Convert.ToDateTime(MainReader["EindTijd"].ToString());
+                    returnContracts.Add(new HiringContract(ID, startDate, endDate, null, null));
+                }
+
+                foreach (HiringContract h in returnContracts)
+                {
+                    h.Employee = GetAccount(h);
+                    h.Renter = GetCustomer(h);
+                    h.Boats = GetBoats(h);
+                    h.Products = GetProducts(h);
+                    h.WaterEntities = GetWaterEntities(h);
+
+                }
+                return returnContracts;
+            }
+            catch (Exception e)
+            {
+                throw e;
+            }
+
+        }
+
+        private static Account GetAccount(HiringContract contract)
+        {
+            try
+            {
+                Account returnAccount = new Account();
+                OracleCommand accountCommand = CreateOracleCommand("Select * FROM \"Account\" WHERE ID = (select Verhuurder_ID FROM HuurContract where ID = :id");
+                accountCommand.Parameters.Add("id", contract.ID);
+
+                OracleDataReader AccountReader = ExecuteQuery(accountCommand);
+                while (AccountReader.Read())
+                {
+                    int id = Convert.ToInt32(AccountReader["ID"].ToString());
+                    string email = AccountReader["Email"].ToString();
+                    string name = AccountReader["Naam"].ToString();
+                    bool isAdmin = Convert.ToBoolean(Convert.ToInt32(AccountReader["IsAdmin"].ToString()));
+                    returnAccount = new Account(id, email, name, isAdmin);
+                }
+                return returnAccount;
+            }
+            catch (Exception e)
+            {
+                throw e;
+            }
+            
+        }
+
+        private static Customer GetCustomer(HiringContract contract)
+        {
+            try
+            {
+                Customer returnCustomer = null;
+                OracleCommand customerCommand =
+                    CreateOracleCommand(
+                        "Select * From Huurder Where ID = (Select Huurder_ID From HuurContract where ID = :id");
+                customerCommand.Parameters.Add(":id", contract.ID);
+
+                OracleDataReader customerReader = ExecuteQuery(customerCommand);
+                while (customerReader.Read())
+                {
+                    int id = Convert.ToInt32(customerReader["ID"].ToString());
+                    string email = customerReader["Email"].ToString();
+                    string name = customerReader["Name"].ToString();
+                    returnCustomer = new Customer(id, email, name);
+                }
+                return returnCustomer;
+            }
+            catch (Exception e)
+            {
+                throw;
+            }
+        }
+
+        private static List<Product> GetProducts(HiringContract contract)
+        {
+            try
+            {
+                List<Product> returnProducts = null;
+                OracleCommand productCommand = CreateOracleCommand("SELECT * FROM Artikel WHERE ID = (SELECT Artikel_ID FROM Huur_Artikel where HuurContract_ID = :id");
+                productCommand.Parameters.Add(":id", contract.ID);
+
+                OracleDataReader productReader = ExecuteQuery(productCommand);
+                while (productReader.Read())
+                {
+                    int id = Convert.ToInt32(productReader["ID"].ToString());
+                    string name = productReader["Naam"].ToString();
+                    double price = Convert.ToDouble(productReader["Prijs"].ToString());
+                    returnProducts.Add(new Product(id, name, price));
+                }
+                return returnProducts;
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
+
+        private static List<IBoat> GetBoats(HiringContract contract)
+        {
+            try
+            {
+                List<IBoat> returnBoats = null;
+                OracleCommand boatCommand =
+                    CreateOracleCommand(
+                        "SELECT b.Naam as Naam, b.DagPrijs as DagPrijs, b.BOOTTYPE as BootType, m.\"Type\" as mType, m.TankInhoud as Tankinhoud, s.\"Type\" as sType  FROM BOOT b LEFT JOIN MotorBoot m ON b.Naam = m.Naam LEFT JOIN SpierBoot s on b.Naam = s.Naam WHERE b.Naam = (SELECT Boot_Naam From Huur_Boten WHERE HuurContract_ID = :ID");
+                boatCommand.Parameters.Add(":id", contract.ID);
+
+                OracleDataReader boatReader = ExecuteQuery(boatCommand);
+
+                while (boatReader.Read())
+                {
+                    string name = boatReader["Naam"].ToString();
+                    double DayPrice = Convert.ToDouble(boatReader["DagPrijs"].ToString());
+                    string bootType = boatReader["BOOTTYPE"].ToString();
+
+                    switch (bootType)
+                    {
+                        case "SpierBoot":
+                        {
+                            string type = boatReader["STYPE"].ToString();
+                                returnBoats.Add(new MuscleBoat(name, DayPrice, type));
+                            break;
+                        }
+                        case "MotorBoot":
+                        {
+                                string type = boatReader["MTYPE"].ToString();
+                            double fuel = Convert.ToDouble(boatReader["Tankinhoud"].ToString());
+                                returnBoats.Add(new MotorBoat(name, DayPrice, type, fuel));
+                                break;
+                        }
+
+                    }
+                }
+                return returnBoats;
+            }
+            catch (Exception)
+            {
+                
+                throw;
+            }
+            
+        }
+
+        private static List<WaterEntity> GetWaterEntities(HiringContract contract)
+        {
+            try
+            {
+                List<WaterEntity> returnWaterEntities = null;
+                OracleCommand waterCommand =
+                    CreateOracleCommand(
+                        "SELECT * FROM WATERLICHAAM WHERE ID = (SELECT WATERLICHAAM_ID FROM HUUR_WATERLICHAAM WHERE HUURCONTRACT_ID = :id");
+                waterCommand.Parameters.Add(":id", contract.ID);
+
+                OracleDataReader waterReader = ExecuteQuery(waterCommand);
+
+                while (waterReader.Read())
+                {
+                    int id = Convert.ToInt32(waterReader["ID"].ToString());
+                    if (waterReader.IsDBNull(1))
+                    {
+                        returnWaterEntities.Add(new WaterEntity(id));
+                    }
+                    else
+                    {
+                        string name = waterReader["Naam"].ToString();
+                        returnWaterEntities.Add(new WaterEntity(id, name));
+                    }
+
+                }
+                return returnWaterEntities;
+            }
+            catch (Exception)
+            {
+                
+                throw;
+            }
         }
 
         internal static List<Product> GetProducts()

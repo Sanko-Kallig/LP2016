@@ -13,7 +13,7 @@ namespace Administration_Sloepke
     /// <summary>
     /// A motorized boat used for rental.
     /// </summary>
-    public class MotorBoat
+    public class MotorBoat : Boat
     {
         /// <summary>
         /// Gets or sets what kind of motorized boat this is.
@@ -30,7 +30,7 @@ namespace Administration_Sloepke
         /// </summary>
         /// <param name="type">The type of motorized boat.</param>
         /// <param name="fuelCapacity">The fuel capacity of this motorized boat.</param>
-        public MotorBoat(string type, double fuelCapacity)
+        public MotorBoat(string name, double dayPrice, string type, double fuelCapacity) : base(name, dayPrice)
         {
             this.Type = type;
             this.FuelCapacity = fuelCapacity;
