@@ -29,5 +29,10 @@ namespace Administration_Sloepke
         {
             this.Type = type;
         }
+
+        public override string ToString()
+        {
+            return base.ToString() + ": " + Type;
+        }
     }
 }

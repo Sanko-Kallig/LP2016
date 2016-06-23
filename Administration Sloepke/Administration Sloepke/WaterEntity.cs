@@ -45,5 +45,10 @@ namespace Administration_Sloepke
             this.ID = id;
             this.Name = name;
         }
+
+        public override string ToString()
+        {
+            return Name.ToString();
+        }
     }
 }

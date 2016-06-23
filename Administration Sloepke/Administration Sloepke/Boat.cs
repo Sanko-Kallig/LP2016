@@ -35,5 +35,10 @@ namespace Administration_Sloepke
             this.Name = name;
             this.DayPrice = dayPrice;
         }
+
+        public override string ToString()
+        {
+            return Name + " - " + DayPrice.ToString();
+        }
     }
 }

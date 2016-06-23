@@ -23,6 +23,7 @@ namespace Administration_Sloepke
         /// </summary>
         public List<Product> Products { get; set; }
 
+
         /// <summary>
         /// Gets or sets a list of constracts from the database.
         /// </summary>
@@ -32,6 +33,12 @@ namespace Administration_Sloepke
         /// Gets or sets a list of boats from the database
         /// </summary>
         public List<IBoat> Boats { get; set; }
+
+        public List<WaterEntity> WaterEntities { get; set; }
+
+        public List<MotorBoat> TempMotorBoats { get; set; }
+
+        public List<MuscleBoat> TempMuscleBoats { get; set; }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="Administration"/> class.
@@ -66,6 +73,10 @@ namespace Administration_Sloepke
             return DatabaseManager.GetBoats();
         }
 
+        public List<WaterEntity> GetWaterEntities()
+        {
+            return DatabaseManager.GetWaterEntities();
+        }
         public Customer GetCustomer(string email)
         {
             return DatabaseManager.GetCustomer(email);
@@ -114,6 +125,27 @@ namespace Administration_Sloepke
         public void CalculateTempFile(List<string> lines )
         {
             throw new NotImplementedException();
+        }
+
+        public List<MotorBoat> GetMotorBoats()
+        {
+            List<MotorBoat> returnMotorBoats = new List<MotorBoat>();
+            foreach (IBoat b in Boats.Where(b => b is MotorBoat))
+            {
+                returnMotorBoats.Add(b as MotorBoat);
+            }
+            return returnMotorBoats;
+        }
+
+
+        public List<MuscleBoat>  GetMuscleBoats()
+        {
+            List<MuscleBoat> returnMuscleBoats = new List<MuscleBoat>();
+            foreach (IBoat b in Boats.Where(b => b is MuscleBoat))
+            {
+                returnMuscleBoats.Add(b as MuscleBoat);
+            }
+            return returnMuscleBoats;
         }
     }
 }

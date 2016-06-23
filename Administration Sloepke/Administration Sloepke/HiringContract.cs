@@ -2,6 +2,9 @@
 //      Copyright (c) Fontyss. All rights reserved.
 // </copyright>
 // <author>Sander Koch</author>
+
+using System.Runtime.InteropServices;
+
 namespace Administration_Sloepke
 {
     using System;
@@ -53,6 +56,13 @@ namespace Administration_Sloepke
 
         public List<WaterEntity> WaterEntities { get; set; }
 
+        public HiringContract()
+        {
+            Boats = new List<IBoat>();
+            WaterEntities = new List<WaterEntity>();
+            Products = new List<Product>();
+        }
+
         /// <summary>
         /// Initializes a new instance of the <see cref="HiringContract"/> class.
         /// </summary>
@@ -68,7 +78,105 @@ namespace Administration_Sloepke
             this.EndDate = endDate;
             this.Employee = employee;
             this.Renter = renter;
+            Boats = new List<IBoat>();
+            WaterEntities = new List<WaterEntity>();
+            Products = new List<Product>();
         }
+
+        public double CalculateBudget(double budget)
+        {
+            int days = EndDate.Day - StartDate.Day;
+            double totalprice = 0;
+            double leftover = 0;
+            if (Products != null)
+            {
+                foreach (Product p in Products)
+                {
+                    totalprice += (p.Price * days);
+                }
+            }
+
+            foreach (IBoat b in Boats.Where(b => b is MuscleBoat))
+            {
+                totalprice += (10*days);
+            }
+            foreach (IBoat b in Boats.Where(b => b is MotorBoat))
+            {
+                totalprice += (15*days);
+            }
+            if (WaterEntities != null)
+            {
+                foreach (WaterEntity w in WaterEntities.Where(b => b.Name != null))
+                {
+                    totalprice += (2 * days);
+                }
+            }
+
+            leftover = budget - totalprice;
+
+            if (leftover < 0)
+            {
+                throw new Exception("Zit over het budget heen.");
+            }
+            else
+            {
+                if((int)Math.Floor(leftover / (1 * days)) <= 5 && (int)Math.Floor(leftover / (1 * days)) > 0)
+                {
+                    if ((int) Math.Floor(leftover/(1*days)) > 12)
+                    {
+                        FrieseCount = 12;
+                        totalprice += (FrieseCount * 1) * days;
+                    }
+                    else
+                    {
+                        FrieseCount = (int)Math.Floor(leftover / (1 * days));
+                        totalprice += (FrieseCount * 1) * days;
+                    }
+                    
+
+                }
+                else if ((int) Math.Floor(leftover/(1.5*days)) > 0)
+                {
+                    if ((int)Math.Floor(leftover / (1.5 * days)) > 12)
+                    {
+                        FrieseCount = 12;
+                        totalprice += (FrieseCount * 1.5) * days;
+                    }
+                    else
+                    {
+                        FrieseCount = (int)Math.Floor(leftover / (1.5 * days));
+                        totalprice += (FrieseCount * 1.5) * days;
+                    }
+                }
+                else
+                {
+                    throw new Exception("Kan geen friese meren op met dit budget");
+                }
+            }
+            return totalprice;
+        }
+
+        public List<MotorBoat> GetMotorBoats()
+        {
+            List<MotorBoat> returnMotorBoats = new List<MotorBoat>();
+            foreach (IBoat b in Boats.Where(b => b is MotorBoat))
+            {
+                returnMotorBoats.Add(b as MotorBoat);
+            }
+            return returnMotorBoats;
+        }
+
+
+        public List<MuscleBoat> GetMuscleBoats()
+        {
+            List<MuscleBoat> returnMuscleBoats = new List<MuscleBoat>();
+            foreach (IBoat b in Boats.Where(b => b is MuscleBoat))
+            {
+                returnMuscleBoats.Add(b as MuscleBoat);
+            }
+            return returnMuscleBoats;
+        }
+
 
         public override string ToString()
         {

@@ -116,7 +116,7 @@ namespace Administration_Sloepke
             try
             {
                 Account returnAccount = new Account();
-                OracleCommand accountCommand = CreateOracleCommand("Select * FROM \"Account\" WHERE ID = (select Verhuurder_ID FROM HuurContract where ID = :id");
+                OracleCommand accountCommand = CreateOracleCommand("Select * FROM \"Account\" WHERE ID = (select Verhuurder_ID FROM HuurContract where ID = :id)");
                 accountCommand.Parameters.Add("id", contract.ID);
 
                 OracleDataReader AccountReader = ExecuteQuery(accountCommand);
@@ -141,18 +141,18 @@ namespace Administration_Sloepke
         {
             try
             {
-                Customer returnCustomer = null;
+                Customer returnCustomer = new Customer();
                 OracleCommand customerCommand =
                     CreateOracleCommand(
-                        "Select * From Huurder Where ID = (Select Huurder_ID From HuurContract where ID = :id");
+                        "Select * From Huurder Where ID = (Select Huurder_ID From HuurContract where ID = :id)");
                 customerCommand.Parameters.Add(":id", contract.ID);
 
                 OracleDataReader customerReader = ExecuteQuery(customerCommand);
                 while (customerReader.Read())
                 {
                     int id = Convert.ToInt32(customerReader["ID"].ToString());
+                    string name = customerReader["Naam"].ToString();
                     string email = customerReader["Email"].ToString();
-                    string name = customerReader["Name"].ToString();
                     returnCustomer = new Customer(id, email, name);
                 }
                 return returnCustomer;
@@ -167,8 +167,8 @@ namespace Administration_Sloepke
         {
             try
             {
-                List<Product> returnProducts = null;
-                OracleCommand productCommand = CreateOracleCommand("SELECT * FROM Artikel WHERE ID = (SELECT Artikel_ID FROM Huur_Artikel where HuurContract_ID = :id");
+                List<Product> returnProducts = new List<Product>();
+                OracleCommand productCommand = CreateOracleCommand("SELECT * FROM Artikel WHERE ID IN (SELECT Artikel_ID FROM Huur_Artikelen where HuurContract_ID = :id)");
                 productCommand.Parameters.Add(":id", contract.ID);
 
                 OracleDataReader productReader = ExecuteQuery(productCommand);
@@ -191,10 +191,10 @@ namespace Administration_Sloepke
         {
             try
             {
-                List<IBoat> returnBoats = null;
+                List<IBoat> returnBoats = new List<IBoat>();
                 OracleCommand boatCommand =
                     CreateOracleCommand(
-                        "SELECT b.Naam as Naam, b.DagPrijs as DagPrijs, b.BOOTTYPE as BootType, m.\"Type\" as mType, m.TankInhoud as Tankinhoud, s.\"Type\" as sType  FROM BOOT b LEFT JOIN MotorBoot m ON b.Naam = m.Naam LEFT JOIN SpierBoot s on b.Naam = s.Naam WHERE b.Naam = (SELECT Boot_Naam From Huur_Boten WHERE HuurContract_ID = :ID");
+                        "SELECT b.Naam as Naam, b.DagPrijs as DagPrijs, b.BOOTTYPE as BootType, m.\"Type\" as mType, m.TankInhoud as Tankinhoud, s.\"Type\" as sType  FROM BOOT b LEFT JOIN MotorBoot m ON b.Naam = m.Naam LEFT JOIN SpierBoot s on b.Naam = s.Naam WHERE b.Naam = (SELECT Boot_Naam From Huur_Boten WHERE HuurContract_ID = :ID)");
                 boatCommand.Parameters.Add(":id", contract.ID);
 
                 OracleDataReader boatReader = ExecuteQuery(boatCommand);
@@ -237,10 +237,10 @@ namespace Administration_Sloepke
         {
             try
             {
-                List<WaterEntity> returnWaterEntities = null;
+                List<WaterEntity> returnWaterEntities = new List<WaterEntity>();
                 OracleCommand waterCommand =
                     CreateOracleCommand(
-                        "SELECT * FROM WATERLICHAAM WHERE ID = (SELECT WATERLICHAAM_ID FROM HUUR_WATERLICHAAM WHERE HUURCONTRACT_ID = :id");
+                        "SELECT * FROM WATERLICHAAM WHERE ID IN (SELECT WATERLICHAAM_ID FROM HUUR_WATERLICHAAM WHERE HUURCONTRACT_ID = :id)");
                 waterCommand.Parameters.Add(":id", contract.ID);
 
                 OracleDataReader waterReader = ExecuteQuery(waterCommand);
@@ -268,14 +268,104 @@ namespace Administration_Sloepke
             }
         }
 
-        internal static List<Product> GetProducts()
+        public static List<WaterEntity> GetWaterEntities()
         {
-            throw new NotImplementedException();
+            try
+            {
+                List<WaterEntity> returnWaterEntities = new List<WaterEntity>();
+                OracleCommand waterCommand =
+                    CreateOracleCommand(
+                        "SELECT * FROM WATERLICHAAM");
+
+                OracleDataReader waterReader = ExecuteQuery(waterCommand);
+
+                while (waterReader.Read())
+                {
+                    int id = Convert.ToInt32(waterReader["ID"].ToString());
+                    if (waterReader.IsDBNull(1))
+                    {
+                        returnWaterEntities.Add(new WaterEntity(id));
+                    }
+                    else
+                    {
+                        string name = waterReader["Naam"].ToString();
+                        returnWaterEntities.Add(new WaterEntity(id, name));
+                    }
+
+                }
+                return returnWaterEntities;
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
         }
 
-        internal static List<IBoat> GetBoats()
+        public static List<Product> GetProducts()
         {
-            throw new NotImplementedException();
+            try
+            {
+                List<Product> returnProducts = new List<Product>();
+                OracleCommand productCommand = CreateOracleCommand("SELECT * FROM Artikel");
+
+                OracleDataReader productReader = ExecuteQuery(productCommand);
+                while (productReader.Read())
+                {
+                    int id = Convert.ToInt32(productReader["ID"].ToString());
+                    string name = productReader["Naam"].ToString();
+                    double price = Convert.ToDouble(productReader["Prijs"].ToString());
+                    returnProducts.Add(new Product(id, name, price));
+                }
+                return returnProducts;
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
+
+        public static List<IBoat> GetBoats()
+        {
+            try
+            {
+                List<IBoat> returnBoats = new List<IBoat>();
+                OracleCommand boatCommand =
+                    CreateOracleCommand(
+                        "SELECT b.Naam as Naam, b.DagPrijs as DagPrijs, b.BOOTTYPE as BootType, m.\"Type\" as mType, m.TankInhoud as Tankinhoud, s.\"Type\" as sType  FROM BOOT b LEFT JOIN MotorBoot m ON b.Naam = m.Naam LEFT JOIN SpierBoot s on b.Naam = s.Naam");
+                OracleDataReader boatReader = ExecuteQuery(boatCommand);
+
+                while (boatReader.Read())
+                {
+                    string name = boatReader["Naam"].ToString();
+                    double DayPrice = Convert.ToDouble(boatReader["DagPrijs"].ToString());
+                    string bootType = boatReader["BOOTTYPE"].ToString();
+
+                    switch (bootType)
+                    {
+                        case "SpierBoot":
+                            {
+                                string type = boatReader["STYPE"].ToString();
+                                returnBoats.Add(new MuscleBoat(name, DayPrice, type));
+                                break;
+                            }
+                        case "MotorBoot":
+                            {
+                                string type = boatReader["MTYPE"].ToString();
+                                double fuel = Convert.ToDouble(boatReader["Tankinhoud"].ToString());
+                                returnBoats.Add(new MotorBoat(name, DayPrice, type, fuel));
+                                break;
+                            }
+
+                    }
+                }
+                return returnBoats;
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
         }
 
         internal static Customer GetCustomer(string email)
@@ -285,7 +375,49 @@ namespace Administration_Sloepke
 
         internal static bool AddHiringContract(HiringContract hiringContract)
         {
-            throw new NotImplementedException();
+            try
+            {
+                OracleCommand contractCommand =
+                    CreateOracleCommand(
+                        "INSERT INTO HUURCONTRACT(BeginTijd, EindTijd, Huurder_ID, Verhuurder_ID) VALUES(:startDate, :endDate, :customerID, :employeeID)");
+                contractCommand.Parameters.Add(":startDate", hiringContract.StartDate);
+                contractCommand.Parameters.Add(":endDate", hiringContract.EndDate);
+                contractCommand.Parameters.Add(":customerID", hiringContract.Renter.ID);
+                contractCommand.Parameters.Add(":employeeID", hiringContract.Employee.ID);
+
+                if (ExecuteNonQuery(contractCommand))
+                {
+                    foreach (IBoat boat in hiringContract.Boats)
+                    {
+                        OracleCommand boatCommand =
+                            CreateOracleCommand("Insert into HUUR_BOTEN(Huurcontract_ID, Boot_Naam) VALUES (:id, :name)");
+                        boatCommand.Parameters.Add(":id", hiringContract.ID);
+                        boatCommand.Parameters.Add(":name", boat.Name);
+                        ExecuteNonQuery(boatCommand);
+                    }
+                    foreach (Product p in hiringContract.Products)
+                    {
+                        OracleCommand productCommand =
+                            CreateOracleCommand("Insert into HUUR_ARTIKELEN(Huurcontract_ID, ARTIKEL_ID) VALUES (:id, :aid)");
+                        productCommand.Parameters.Add(":id", hiringContract.ID);
+                        productCommand.Parameters.Add(":aid", p.ID);
+                        ExecuteNonQuery(productCommand);
+                    }
+                    foreach (WaterEntity w in hiringContract.WaterEntities)
+                    {
+                        OracleCommand waterCommand =
+                            CreateOracleCommand("Insert into HUUR_BOTEN(Huurcontract_ID, Boot_Naam) VALUES (:id, :name)");
+                        boatCommand.Parameters.Add(":id", hiringContract.ID);
+                        boatCommand.Parameters.Add(":name", boat.Name);
+                        ExecuteNonQuery(boatCommand);
+                    }
+                }
+            }
+            catch (Exception)
+            {
+                
+                throw;
+            }
         }
 
         internal static bool AddProduct(Product product)

@@ -35,5 +35,10 @@ namespace Administration_Sloepke
             this.Type = type;
             this.FuelCapacity = fuelCapacity;
         }
+
+        public override string ToString()
+        {
+            return base.ToString() + ": " + Type + "Tankinhoud: " + FuelCapacity.ToString();
+        }
     }
 }

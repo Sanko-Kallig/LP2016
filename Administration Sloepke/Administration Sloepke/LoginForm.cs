@@ -27,6 +27,7 @@ namespace Administration_Sloepke
             LoggedInAccount.AccountLoggedIn = Admin.GetAccount(email, password);
             if (LoggedInAccount.AccountLoggedIn != null)
             {
+                this.Hide();
                 OverviewForm oVM = new OverviewForm(Admin);
                 oVM.ShowDialog();
                 this.Show();

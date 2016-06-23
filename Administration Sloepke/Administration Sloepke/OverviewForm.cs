@@ -34,5 +34,13 @@ namespace Administration_Sloepke
             }
             
         }
+
+        private void btnNewContract_Click(object sender, EventArgs e)
+        {
+            this.Hide();
+            HiringContractForm hCF = new HiringContractForm(Admin);
+            hCF.ShowDialog();
+            this.Show();
+        }
     }
 }

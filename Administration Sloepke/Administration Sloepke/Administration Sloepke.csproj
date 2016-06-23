@@ -82,6 +82,9 @@
       <DependentUpon>HiringContractForm.cs</DependentUpon>
     </Compile>
     <Compile Include="WaterEntity.cs" />
+    <EmbeddedResource Include="HiringContractForm.resx">
+      <DependentUpon>HiringContractForm.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="LoginForm.resx">
       <DependentUpon>LoginForm.cs</DependentUpon>
     </EmbeddedResource>
@@ -108,7 +111,9 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <None Include="App.config" />
+    <None Include="App.config">
+      <SubType>Designer</SubType>
+    </None>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

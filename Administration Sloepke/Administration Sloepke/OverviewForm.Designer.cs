@@ -59,6 +59,7 @@
             this.btnNewContract.TabIndex = 2;
             this.btnNewContract.Text = "Nieuw contract";
             this.btnNewContract.UseVisualStyleBackColor = true;
+            this.btnNewContract.Click += new System.EventHandler(this.btnNewContract_Click);
             // 
             // OverviewForm
             // 
